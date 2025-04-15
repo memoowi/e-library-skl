@@ -27,13 +27,16 @@ Route::middleware(['auth'])->name('dashboard.')->group(function () {
     Route::get('/borrow/{slug}', [DashboardController::class, 'borrow'])->name('borrow');
 
     Route::middleware(['admin'])->get('/borrow-list', [DashboardController::class, 'borrowList'])->name('borrow-list');
+    Route::middleware(['admin'])->get('/borrow-list/{id}', [DashboardController::class, 'showBorrow'])->name('show-borrow');
 });
 
 // Borrow Routes
 Route::middleware(['auth'])->name('borrow.')->group(function () {
     Route::post('/borrow/{id}', [BorrowController::class, 'request'])->name('request');
-    Route::patch('/borrow/accept', [BorrowController::class, 'accept'])->name('accept');
-    Route::patch('/borrow/decline', [BorrowController::class, 'decline'])->name('decline');
+    Route::middleware('admin')->patch('/borrow/accept', [BorrowController::class, 'accept'])->name('accept');
+    Route::middleware('admin')->patch('/borrow/decline', [BorrowController::class, 'decline'])->name('decline');
+    Route::middleware('admin')->patch('/borrow/return', [BorrowController::class, 'return'])->name('return');
+    Route::middleware('admin')->patch('/borrow/lost', [BorrowController::class, 'lost'])->name('lost');
 });
 
 // Auth Routes

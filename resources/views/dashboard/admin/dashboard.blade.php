@@ -11,7 +11,8 @@
             Dashboard Admin
         </h1>
         <a href={{ route('book.index') }} class="p-2 bg-blue-800 text-white rounded-md w-fit font-medium">Book List</a>
-        <a href="#" class="p-2 bg-blue-800 text-white rounded-md w-fit font-medium">Borrow List</a>
+        <a href={{ route('dashboard.borrow-list') }} class="p-2 bg-blue-800 text-white rounded-md w-fit font-medium">Borrow
+            List</a>
         {{-- Table Request Borrow --}}
         <table class="p-4 border border-black">
             <thead>

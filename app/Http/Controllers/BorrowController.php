@@ -48,7 +48,7 @@ class BorrowController extends Controller
         try {
             $borrow = Borrow::find($request->id);
 
-            
+
             $borrow->update([
                 'status' => 'borrowed',
             ]);
@@ -76,6 +76,54 @@ class BorrowController extends Controller
                 'status' => 'available',
             ]);
             return redirect()->route('dashboard.index')->with('success', 'Borrow request rejected successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    public function return(Request $request)
+    {
+
+        try {
+            $request->validate([
+                'id' => "required|exists:borrows",
+            ]);
+
+            $borrow = Borrow::find($request->id);
+
+            if ($borrow->status !== "borrowed" && $borrow->status !== "lost") {
+                throw new \Exception("Invalid borrow status");
+            }
+
+            $borrow->update([
+                'status' => 'returned',
+            ]);
+            $borrow->book()->update([
+                'status' => 'available',
+            ]);
+            return redirect()->route('dashboard.borrow-list')->with('success', 'Book returned successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    public function lost(Request $request)
+    {
+
+        try {
+            $request->validate([
+                'id' => "required|exists:borrows",
+            ]);
+
+            $borrow = Borrow::find($request->id);
+
+            if ($borrow->status !== "borrowed") {
+                throw new \Exception("Invalid borrow status");
+            }
+
+            $borrow->update([
+                'status' => 'lost',
+            ]);
+
+            return redirect()->route('dashboard.borrow-list')->with('success', 'Book marked as Lost');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
